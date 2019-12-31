@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProjetoMercadoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Cliente">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nome" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Sobrenome" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CPF" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Endereço" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Número" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CEP" Type="String" MaxLength="8" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Cidade" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Estado" Type="String" MaxLength="18" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="DataNascimento" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Telefone" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Sexo" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Fidelidade" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="QntFidelidade" Type="Int64" />
+    <NavigationProperty Name="Pedidos" Relationship="Self.FK__Pedidos__Cliente__6A30C649" FromRole="Clientes" ToRole="Pedidos" />
+  </EntityType>
+  <EntityType Name="Funcionario">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nome" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Sobrenome" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CPF" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Senha" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Admin" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Pedidos" Relationship="Self.Pedidos_fk0" FromRole="Funcionarios" ToRole="Pedidos" />
+    <Property Name="Desativado" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="ItensPedido">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Produto" Type="Int64" Nullable="false" />
+    <Property Name="Quantidade" Type="Int64" Nullable="false" />
+    <Property Name="Valor" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Códigopedido" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Produto1" Relationship="Self.ItensPedidos_fk0" FromRole="ItensPedidos" ToRole="Produtos" />
+    <NavigationProperty Name="Pedido" Relationship="Self.ItensPedidos_fk1" FromRole="ItensPedidos" ToRole="Pedidos" />
+  </EntityType>
+  <EntityType Name="Pedido">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Data" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CodigoFuncionario" Type="Int64" Nullable="false" />
+    <Property Name="Clientes" Type="Int64" />
+    <NavigationProperty Name="Cliente" Relationship="Self.FK__Pedidos__Cliente__6A30C649" FromRole="Pedidos" ToRole="Clientes" />
+    <NavigationProperty Name="Funcionario" Relationship="Self.Pedidos_fk0" FromRole="Pedidos" ToRole="Funcionarios" />
+    <NavigationProperty Name="ItensPedidos" Relationship="Self.ItensPedidos_fk1" FromRole="Pedidos" ToRole="ItensPedidos" />
+  </EntityType>
+  <EntityType Name="Produto">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nome" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Marca" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Preço" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Codigo" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="ItensPedidos" Relationship="Self.ItensPedidos_fk0" FromRole="Produtos" ToRole="ItensPedidos" />
+    <Property Name="Desativado" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Pedidos__Cliente__6A30C649">
+    <End Role="Clientes" Type="Self.Cliente" Multiplicity="0..1" />
+    <End Role="Pedidos" Type="Self.Pedido" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Clientes">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Pedidos">
+        <PropertyRef Name="Clientes" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Pedidos_fk0">
+    <End Role="Funcionarios" Type="Self.Funcionario" Multiplicity="1" />
+    <End Role="Pedidos" Type="Self.Pedido" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Funcionarios">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Pedidos">
+        <PropertyRef Name="CodigoFuncionario" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ItensPedidos_fk0">
+    <End Role="Produtos" Type="Self.Produto" Multiplicity="1" />
+    <End Role="ItensPedidos" Type="Self.ItensPedido" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Produtos">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ItensPedidos">
+        <PropertyRef Name="Produto" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ItensPedidos_fk1">
+    <End Role="Pedidos" Type="Self.Pedido" Multiplicity="1" />
+    <End Role="ItensPedidos" Type="Self.ItensPedido" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Pedidos">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ItensPedidos">
+        <PropertyRef Name="Códigopedido" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ProjetoMercado2Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Clientes" EntityType="Self.Cliente" />
+    <EntitySet Name="Funcionarios" EntityType="Self.Funcionario" />
+    <EntitySet Name="ItensPedidos" EntityType="Self.ItensPedido" />
+    <EntitySet Name="Pedidos" EntityType="Self.Pedido" />
+    <EntitySet Name="Produtos" EntityType="Self.Produto" />
+    <AssociationSet Name="FK__Pedidos__Cliente__6A30C649" Association="Self.FK__Pedidos__Cliente__6A30C649">
+      <End Role="Clientes" EntitySet="Clientes" />
+      <End Role="Pedidos" EntitySet="Pedidos" />
+    </AssociationSet>
+    <AssociationSet Name="Pedidos_fk0" Association="Self.Pedidos_fk0">
+      <End Role="Funcionarios" EntitySet="Funcionarios" />
+      <End Role="Pedidos" EntitySet="Pedidos" />
+    </AssociationSet>
+    <AssociationSet Name="ItensPedidos_fk0" Association="Self.ItensPedidos_fk0">
+      <End Role="Produtos" EntitySet="Produtos" />
+      <End Role="ItensPedidos" EntitySet="ItensPedidos" />
+    </AssociationSet>
+    <AssociationSet Name="ItensPedidos_fk1" Association="Self.ItensPedidos_fk1">
+      <End Role="Pedidos" EntitySet="Pedidos" />
+      <End Role="ItensPedidos" EntitySet="ItensPedidos" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

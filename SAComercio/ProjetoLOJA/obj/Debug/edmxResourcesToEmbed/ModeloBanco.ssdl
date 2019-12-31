@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProjetoMercado2Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Clientes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nome" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="Sobrenome" Type="varchar" MaxLength="256" Nullable="false" />
+    <Property Name="CPF" Type="varchar" MaxLength="11" Nullable="false" />
+    <Property Name="Endereço" Type="varchar" MaxLength="128" Nullable="false" />
+    <Property Name="Número" Type="varchar" MaxLength="16" Nullable="false" />
+    <Property Name="CEP" Type="varchar" MaxLength="8" Nullable="false" />
+    <Property Name="Cidade" Type="varchar" MaxLength="128" Nullable="false" />
+    <Property Name="Estado" Type="varchar" MaxLength="18" Nullable="false" />
+    <Property Name="DataNascimento" Type="datetime" Nullable="false" />
+    <Property Name="Telefone" Type="varchar" MaxLength="11" Nullable="false" />
+    <Property Name="Sexo" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="Fidelidade" Type="decimal" Precision="19" Scale="4" />
+    <Property Name="QntFidelidade" Type="bigint" />
+  </EntityType>
+  <EntityType Name="Funcionarios">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nome" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="Sobrenome" Type="varchar" MaxLength="256" Nullable="false" />
+    <Property Name="CPF" Type="varchar" MaxLength="11" Nullable="false" />
+    <Property Name="Senha" Type="varchar" MaxLength="32" Nullable="false" />
+    <Property Name="Admin" Type="bit" Nullable="false" />
+    <Property Name="Desativado" Type="bit" />
+  </EntityType>
+  <EntityType Name="ItensPedidos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Produto" Type="bigint" Nullable="false" />
+    <Property Name="Quantidade" Type="bigint" Nullable="false" />
+    <Property Name="Valor" Type="decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Códigopedido" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Pedidos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Data" Type="datetime" Nullable="false" />
+    <Property Name="CodigoFuncionario" Type="bigint" Nullable="false" />
+    <Property Name="Clientes" Type="bigint" />
+  </EntityType>
+  <EntityType Name="Produtos">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nome" Type="varchar" MaxLength="256" Nullable="false" />
+    <Property Name="Marca" Type="varchar" MaxLength="128" Nullable="false" />
+    <Property Name="Preço" Type="decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Codigo" Type="varchar" MaxLength="16" Nullable="false" />
+    <Property Name="Desativado" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="ItensPedidos_fk0">
+    <End Role="Produtos" Type="Self.Produtos" Multiplicity="1" />
+    <End Role="ItensPedidos" Type="Self.ItensPedidos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Produtos">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ItensPedidos">
+        <PropertyRef Name="Produto" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ItensPedidos_fk1">
+    <End Role="Pedidos" Type="Self.Pedidos" Multiplicity="1" />
+    <End Role="ItensPedidos" Type="Self.ItensPedidos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Pedidos">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ItensPedidos">
+        <PropertyRef Name="Códigopedido" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="Pedidos_fk0">
+    <End Role="Funcionarios" Type="Self.Funcionarios" Multiplicity="1" />
+    <End Role="Pedidos" Type="Self.Pedidos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Funcionarios">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Pedidos">
+        <PropertyRef Name="CodigoFuncionario" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ProjetoMercado2ModelStoreContainer">
+    <EntitySet Name="Clientes" EntityType="Self.Clientes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Funcionarios" EntityType="Self.Funcionarios" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItensPedidos" EntityType="Self.ItensPedidos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Pedidos" EntityType="Self.Pedidos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Produtos" EntityType="Self.Produtos" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="ItensPedidos_fk0" Association="Self.ItensPedidos_fk0">
+      <End Role="Produtos" EntitySet="Produtos" />
+      <End Role="ItensPedidos" EntitySet="ItensPedidos" />
+    </AssociationSet>
+    <AssociationSet Name="ItensPedidos_fk1" Association="Self.ItensPedidos_fk1">
+      <End Role="Pedidos" EntitySet="Pedidos" />
+      <End Role="ItensPedidos" EntitySet="ItensPedidos" />
+    </AssociationSet>
+    <AssociationSet Name="Pedidos_fk0" Association="Self.Pedidos_fk0">
+      <End Role="Funcionarios" EntitySet="Funcionarios" />
+      <End Role="Pedidos" EntitySet="Pedidos" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
